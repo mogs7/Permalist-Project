@@ -36,7 +36,7 @@ app.get("/", async (req, res) => {
 
 app.post("/add", async (req, res) => {
   const item = req.body.newItem;
-  // items.push({ title: item });
+
   try {
     await db.query("INSERT INTO items (title) VALUES ($1)",[item]);
     res.redirect("/");
@@ -57,7 +57,17 @@ app.post("/edit", async (req, res) => {
   }
 });
 
-app.post("/delete", (req, res) => {});
+app.post("/delete", async (req, res) => {
+  const item = req.body.deleteItemId;
+  
+  try {
+    await db.query("DELETE from items WHERE id = ($1)",[item]);
+    res.redirect("/");
+  } catch (error) {
+   console.log(error);
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
